@@ -1,0 +1,33 @@
+function helper(array, reference, result) {
+    if (array.length === 0) {
+        return;
+    }
+    const newArray = [];
+    const newReference = {};
+    for (const category of array) {
+        if (reference[category.parent_id]) {
+            newReference[category.id] = 1
+            result.push(category);
+        } else {
+            newArray.push(category);
+        }
+    }
+    helper(newArray, newReference, result);
+
+}
+
+module.exports = function sortCategoriesForInsert(inputJson) {
+    const properJsonOutput = [];
+    const reference = {};
+    const input = [];
+    for (const category of inputJson) {
+        if (category.parent_id === null) {
+            reference[category.id] = 1;
+            properJsonOutput.push(category);
+        } else {
+            input.push(category);
+        }
+    }
+    helper(input, reference, properJsonOutput);
+    return properJsonOutput;
+}
